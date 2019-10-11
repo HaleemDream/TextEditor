@@ -10,9 +10,9 @@ GMenu* g_main_menu(){
 
     //file menu children
     g_menu_insert(file_menu, 0, "Open", "Open");
-    g_menu_insert(file_menu, 1, "Close", "Close");
-    g_menu_insert(file_menu, 2, "Save", "Save");
-
+    g_menu_insert(file_menu, 1, "Save", "Save");
+    g_menu_insert(file_menu, 2, "Close", "Close");
+    
     //about menu
     GMenu* about_menu = g_menu_new();
     g_menu_insert(about_menu, 0, "Version", "Version");
