@@ -1,13 +1,18 @@
 #include "action_entries.h"
 
 //action methods
+void save_active(GSimpleAction* action, GVariant* param, gpointer app){
+    //TODO- save text to file
+}
+
 void close_active(GSimpleAction* action, GVariant* param, gpointer app){
     g_application_quit(G_APPLICATION(app));
 }
 
 //action definitions
 static GActionEntry app_entries[] ={
-     {"close", close_active, NULL, NULL, NULL}
+     {"close", close_active, NULL, NULL, NULL},
+     {"save", save_active, NULL, NULL, NULL}
 };
 
 //called in main to link actions
