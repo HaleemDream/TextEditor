@@ -12,6 +12,7 @@ SRC += action/action_entries.c
 SRC += buffer/read.c
 SRC += main.c 
 SRC += menu/main_menu.c 
+SRC += widget/text_area.c
 OBJS = $(SRC:.c=.o)
 
 all: main clean

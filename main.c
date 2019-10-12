@@ -3,10 +3,7 @@
 #include "menu/main_menu.h"
 #include "buffer/read.h"
 #include "action/action_entries.h"
-
-void on_text_change(GtkTextBuffer* buffer, gpointer user_data){
-    
-}
+#include "widget/text_area.h"
 
 void activate(GtkApplication* app, gpointer user_data){
     GtkWidget* window;
@@ -16,15 +13,11 @@ void activate(GtkApplication* app, gpointer user_data){
     //main window
     window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW(window), "Dream Editor");
-    gtk_window_set_default_size(GTK_WINDOW(window), 400, 200);
+    gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
 
     //text area
-    text_area = gtk_text_view_new();
-    gtk_container_add(GTK_CONTAINER(window), text_area);
+    gtk_container_add(GTK_CONTAINER(window), get_text_area());
     
-    //text buffer
-    text_buffer = gtk_text_view_get_buffer((GtkTextView*) text_area);
-
     gtk_application_set_menubar(app, (GMenuModel*) g_main_menu());
 
     init_actions(app);
