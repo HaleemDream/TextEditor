@@ -14,8 +14,10 @@ GMenu* g_main_menu(){
     GMenuItem* close = g_menu_item_new("Close", "Close");
 
     //set attr
+    g_menu_item_set_attribute(open, G_MENU_ATTRIBUTE_ACTION, "s", "app.open");
+    g_menu_item_set_attribute(save, G_MENU_ATTRIBUTE_ACTION, "s", "app.save");
     g_menu_item_set_attribute(close, G_MENU_ATTRIBUTE_ACTION, "s", "app.close");
-
+    
     g_menu_insert_item(file_menu, 0, open);
     g_menu_insert_item(file_menu, 1, save);
     g_menu_insert_item(file_menu, 2, close);
