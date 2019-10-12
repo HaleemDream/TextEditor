@@ -8,7 +8,10 @@ DIRS := . $(shell find $(SUBDIR_ROOTS) -type d)
 GARBAGE_PATTERNS := *.o
 GARBAGE := $(foreach DIR,$(DIRS),$(addprefix $(DIR)/,$(GARBAGE_PATTERNS)))
 
-SRC = main.c menu/main_menu.c buffer/read.c
+SRC += action/action_entries.c 
+SRC += buffer/read.c
+SRC += main.c 
+SRC += menu/main_menu.c 
 OBJS = $(SRC:.c=.o)
 
 all: main clean

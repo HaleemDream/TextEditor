@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "menu/main_menu.h"
 #include "buffer/read.h"
+#include "action/action_entries.h"
 
 void on_text_change(GtkTextBuffer* buffer, gpointer user_data){
     
@@ -25,6 +26,8 @@ void activate(GtkApplication* app, gpointer user_data){
     text_buffer = gtk_text_view_get_buffer((GtkTextView*) text_area);
 
     gtk_application_set_menubar(app, (GMenuModel*) g_main_menu());
+
+    init_actions(app);
 
     gtk_widget_show_all(window);
 }
