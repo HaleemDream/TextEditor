@@ -4,6 +4,14 @@ GtkTextBuffer* get_text_buffer(GtkWidget* widget){
     return gtk_text_view_get_buffer((GtkTextView*) widget);
 }
 
+void set_text_buffer_text(GtkTextBuffer* buffer, char* str){
+    gtk_text_buffer_set_text(buffer, str, strlen(str));
+}
+
+void set_text_of_text_area(GtkWidget* area, char* str){
+    set_text_buffer_text(get_text_buffer(area), str);
+}
+
 //read from start to end
 char* read_buffer_text_from_buffer(GtkTextBuffer* buffer){
     GtkTextIter* start = malloc(sizeof(GtkTextIter));

@@ -9,8 +9,63 @@
          - maybe refactor filechoosediag to new home
 */
 
+void open_active(GSimpleAction* gAction, GVariant* param, gpointer app){
+GtkWidget* dialog;
+    GtkFileChooser* chooser;
+    GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+    gint res;
+
+    //TODO Get parent window
+    dialog = gtk_file_chooser_dialog_new("Open File",
+                                          NULL,
+                                          action,
+                                          "Cancel",
+                                          GTK_RESPONSE_CANCEL,
+                                          "Open",
+                                          GTK_RESPONSE_ACCEPT,
+                                          NULL);
+
+    chooser = GTK_FILE_CHOOSER(dialog);
+
+    res = gtk_dialog_run(GTK_DIALOG(dialog));
+
+    if(res == GTK_RESPONSE_ACCEPT){
+        //path
+        char* filename = gtk_file_chooser_get_filename(chooser);
+
+        FILE *fp = fopen(filename, "r");
+        char* line = NULL;
+        size_t len = 0;
+        ssize_t read;
+        int offset;
+
+        //buffer to read in
+        char* buffer = NULL; 
+
+        while((read = getline(&line, &len, fp)) != -1){
+            if(buffer == NULL){
+                buffer = calloc(read, sizeof(char));
+                strncpy(buffer, line, read);
+            } else {
+                char* newPtr;
+                if(newPtr = realloc(buffer,  strlen(buffer) + 1 + read)){
+                    buffer = newPtr;
+                    strncat(buffer, line, read);
+                }
+            }
+        }
+        
+        set_text_of_text_area(get_text_area(), buffer);
+        free(buffer);
+        free(line);
+        fclose(fp);
+    }
+
+    gtk_widget_destroy(dialog);
+}
+
 //action methods
-void save_active(GSimpleAction* a, GVariant* param, gpointer app){
+void save_active(GSimpleAction* gAction, GVariant* param, gpointer app){
     GtkWidget* dialog;
     GtkFileChooser* chooser;
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
@@ -34,7 +89,6 @@ void save_active(GSimpleAction* a, GVariant* param, gpointer app){
         //path
         char* filename = gtk_file_chooser_get_filename(chooser);
         char* text = read_buffer_text_from_widget(get_text_area());
-
         //save to file
         FILE *fp = fopen(filename, "w+");
         fputs(text, fp);
@@ -51,8 +105,9 @@ void close_active(GSimpleAction* action, GVariant* param, gpointer app){
 
 //action definitions
 static GActionEntry app_entries[] ={
-     {"close", close_active, NULL, NULL, NULL},
-     {"save", save_active, NULL, NULL, NULL}
+    {"open", open_active, NULL, NULL, NULL},
+    {"close", close_active, NULL, NULL, NULL},
+    {"save", save_active, NULL, NULL, NULL}
 };
 
 //called in main to link actions
