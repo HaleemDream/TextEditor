@@ -1,6 +1,8 @@
 #include "action_entries.h"
 #include "../buffer/read.h"
 #include "../widget/text_area.h"
+#include "../dialog/file_chooser.h"
+#include "../file/read.h"
 
 /*
     todo - find better alt way to get text_area ref
@@ -10,54 +12,22 @@
 */
 
 void open_active(GSimpleAction* gAction, GVariant* param, gpointer app){
-GtkWidget* dialog;
-    GtkFileChooser* chooser;
+    GtkWidget* dialog;
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
     gint res;
 
-    //TODO Get parent window
-    dialog = gtk_file_chooser_dialog_new("Open File",
-                                          NULL,
-                                          action,
-                                          "Cancel",
-                                          GTK_RESPONSE_CANCEL,
-                                          "Open",
-                                          GTK_RESPONSE_ACCEPT,
-                                          NULL);
-
-    chooser = GTK_FILE_CHOOSER(dialog);
-
+    dialog = get_dialog(action, "Open File", "Open");
     res = gtk_dialog_run(GTK_DIALOG(dialog));
 
     if(res == GTK_RESPONSE_ACCEPT){
         //path
         char* filename = gtk_file_chooser_get_filename(chooser);
-
-        FILE *fp = fopen(filename, "r");
-        char* line = NULL;
-        size_t len = 0;
-        ssize_t read;
-
-        //buffer to read in
-        char* buffer = NULL; 
-
-        while((read = getline(&line, &len, fp)) != -1){
-            if(buffer == NULL){
-                buffer = calloc(read, sizeof(char));
-                strncpy(buffer, line, read);
-            } else {
-                char* newPtr;
-                if(newPtr = realloc(buffer,  strlen(buffer) + 1 + read)){
-                    buffer = newPtr;
-                    strncat(buffer, line, read);
-                }
-            }
-        }
+        char* buffer = read_file(filename);
         
         set_text_of_text_area(get_text_area(), buffer);
+        
         free(buffer);
-        free(line);
-        fclose(fp);
+        free(filename);
     }
 
     gtk_widget_destroy(dialog);
@@ -66,22 +36,10 @@ GtkWidget* dialog;
 //action methods
 void save_active(GSimpleAction* gAction, GVariant* param, gpointer app){
     GtkWidget* dialog;
-    GtkFileChooser* chooser;
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
     gint res;
 
-    //TODO Get parent window
-    dialog = gtk_file_chooser_dialog_new("Save File",
-                                          NULL,
-                                          action,
-                                          "Cancel",
-                                          GTK_RESPONSE_CANCEL,
-                                          "Save",
-                                          GTK_RESPONSE_ACCEPT,
-                                          NULL);
-
-    chooser = GTK_FILE_CHOOSER(dialog);
-
+    dialog = get_dialog(action, "Save File", "Save");
     res = gtk_dialog_run(GTK_DIALOG(dialog));
 
     if(res == GTK_RESPONSE_ACCEPT){
@@ -92,7 +50,7 @@ void save_active(GSimpleAction* gAction, GVariant* param, gpointer app){
         FILE *fp = fopen(filename, "w+");
         fputs(text, fp);
         fclose(fp);
-        g_free(filename);
+        free(filename);
     }
 
     gtk_widget_destroy(dialog);

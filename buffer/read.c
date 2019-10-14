@@ -1,5 +1,7 @@
 #include "read.h"
 
+//todo - make buffer/write?
+
 GtkTextBuffer* get_text_buffer(GtkWidget* widget){
     return gtk_text_view_get_buffer((GtkTextView*) widget);
 }

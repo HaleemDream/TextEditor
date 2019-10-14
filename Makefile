@@ -9,7 +9,9 @@ GARBAGE_PATTERNS := *.o
 GARBAGE := $(foreach DIR,$(DIRS),$(addprefix $(DIR)/,$(GARBAGE_PATTERNS)))
 
 SRC += action/action_entries.c 
+SRC += dialog/file_chooser.c
 SRC += buffer/read.c
+SRC += file/read.c
 SRC += main.c 
 SRC += menu/main_menu.c 
 SRC += widget/text_area.c
